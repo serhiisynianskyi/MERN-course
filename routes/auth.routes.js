@@ -1,10 +1,10 @@
-const { Router } = require('express')
+const {Router} = require('express')
 const bcrypt = require('bcryptjs')
+const config = require('config')
 const jwt = require('jsonwebtoken')
-const { check, validationResult } = require('express-validator')
-const router = Router()
+const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
-
+const router = Router()
 
 // /api/auth/register
 router.post(
@@ -17,7 +17,6 @@ router.post(
   async (req, res) => {
     try {
       const errors = validationResult(req)
-
       if (!errors.isEmpty()) {
         return res.status(400).json({
           errors: errors.array(),
@@ -55,7 +54,7 @@ router.post(
   async (req, res) => {
     try {
 
-      console.log('TEST!!!')
+      
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
@@ -64,7 +63,6 @@ router.post(
           message: 'Error! Not corect data while enter to the system!'
         })
       }
-
       const { email, password } = req.body
 
       const user = await User.findOne({ email })
@@ -72,17 +70,14 @@ router.post(
       if (!user) {
         return res.status(400).json({ message: 'Error, no user with such email' })
       }
-
       const isMatch = await bcrypt.compare(password, user.password)
-
+    
       if (!isMatch) {
         return res.status(400).json({ message: 'Password is not correct, try again!' })
       }
-
       const token = jwt.sign({ userId: user.id },
         config.get('jwtSecret'), { expiresIn: '1h' }
       ) // 1 prop - data whitch will be exncypted in web token, 2 prop- secret string, 3 prop - expiration date 
-
       res.json({ token, userId: user.id })
 
     } catch (e) {
