@@ -1,21 +1,33 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import {BrowserRouter as Router} from 'react-router-dom'
+import {useRoutes} from './routes'
+import {useAuth} from './hooks/auth.hook'
+import {AuthContext} from './context/AuthContext'
+import {Navbar} from './components/Navbar'
+import {Loader} from './components/Loader'
+import 'materialize-css'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+function App() {
+  const {token, login, logout, userId, ready} = useAuth()
+  const isAuthenticated = !!token
+  const routes = useRoutes(isAuthenticated)
+
+  if (!ready) {
+    return <Loader />
   }
+
+  return (
+    <AuthContext.Provider value={{
+      token, login, logout, userId, isAuthenticated
+    }}>
+      <Router>
+        { isAuthenticated && <Navbar /> }
+        <div className="container">
+          {routes}
+        </div>
+      </Router>
+    </AuthContext.Provider>
+  )
 }
 
-export default App;
+export default App
