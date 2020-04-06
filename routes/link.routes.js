@@ -8,7 +8,7 @@ const router = Router()
 router.post('/generate', auth, async (req, res) => {
   try {
     const baseUrl = config.get('baseUrl')
-    const {from} = req.body // redurect user here
+    const {from} = req.body // redirect user here
 
     const code = shortid.generate()
 
@@ -34,6 +34,7 @@ router.post('/generate', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => { // all links
   try {
+    // user.userId - get via auth middleware
     const links = await Link.find({ owner: req.user.userId })
     res.json(links)
   } catch (e) {

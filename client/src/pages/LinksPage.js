@@ -10,6 +10,7 @@ export const LinksPage = () => {
   const {token} = useContext(AuthContext)
 
   const fetchLinks = useCallback(async () => {
+    console.log('fetchLinks');
     try {
       const fetched = await request('/api/link', 'GET', null, {
         Authorization: `Bearer ${token}`

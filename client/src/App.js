@@ -10,6 +10,7 @@ import 'materialize-css'
 function App() {
   const {token, login, logout, userId, ready} = useAuth()
   const isAuthenticated = !!token
+  console.log('App', token);
   const routes = useRoutes(isAuthenticated)
 
   if (!ready) {

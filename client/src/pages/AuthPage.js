@@ -12,12 +12,13 @@ export const AuthPage = () => {
   })
 
   useEffect(() => {
+      console.log('Message', error, message, clearError);
     message(error)
     clearError()
   }, [error, message, clearError])
 
   useEffect(() => {
-    window.M.updateTextFields()
+    window.M.updateTextFields() // make inputs active
   }, [])
 
   const changeHandler = event => {
@@ -37,7 +38,7 @@ export const AuthPage = () => {
       auth.login(data.token, data.userId)
     } catch (e) {}
   }
-
+  console.log('AuthPage');
   return (
     <div className="row">
       <div className="col s6 offset-s3">
