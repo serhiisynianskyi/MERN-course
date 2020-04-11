@@ -11,6 +11,7 @@ app.use(express.json({ extended: true })) // middleware for parsing JSON body - 
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/link', require('./routes/link.routes'))
 app.use('/t', require('./routes/redirect.routes'))
+app.use('/api/toDos', require('./routes/toDos.routes'))
 
 if (process.env.NODE_ENV === 'production') {
 	app.use('/', express.static(path.join(__dirname, 'client', 'build')))

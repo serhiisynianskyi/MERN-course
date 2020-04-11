@@ -4,6 +4,8 @@ import {LinksPage} from './pages/LinksPage'
 import {CreatePage} from './pages/CreatePage'
 import {DetailPage} from './pages/DetailPage'
 import {AuthPage} from './pages/AuthPage'
+import {ToDosPage} from './pages/ToDosPage'
+import {CreateToDoPage} from './pages/CreateToDoPage'
 
 export const useRoutes = isAuthenticated => {
   if (isAuthenticated) {
@@ -14,6 +16,12 @@ export const useRoutes = isAuthenticated => {
         </Route>
         <Route path="/create" exact>
           <CreatePage />
+        </Route>
+        <Route path="/toDos" exact>
+          <ToDosPage />
+        </Route>
+        <Route path="/toDos/create" exact>
+          <CreateToDoPage />
         </Route>
         <Route path="/detail/:id">
           <DetailPage />

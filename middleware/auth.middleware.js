@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   }
 
   try {
-
+    console.log('AUTH check!!!');
     const token = req.headers.authorization.split(' ')[1] // "Bearer TOKEN"
 
     if (!token) {
