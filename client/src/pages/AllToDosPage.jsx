@@ -5,27 +5,22 @@ import {Loader} from '../components/Loader'
 import {ToDosList} from '../components/ToDosList'
 import {Link} from "react-router-dom";
 
-export const ToDosPage = () => {
+export const AllToDosPage = () => {
   const [toDos, setToDos] = useState([])
   const {loading, request} = useHttp()
   const {token} = useContext(AuthContext)
+  const [owner, setOwner] = useState('')
 
   const fetchTodos = useCallback(async () => {
     try {
-      const fetched = await request('/api/toDos', 'GET', null, {
+      console.log('fetchAllTodos');
+      const fetched = await request('/api/toDos/allToDos', 'GET', null, {
         Authorization: `Bearer ${token}`
       })
-      setToDos(fetched)
+      setToDos(fetched.records)
+      setOwner(fetched.owner)
     } catch (e) {}
   }, [token, request])
-
-  const deleteItem = useCallback(async (id) => {
-    const fetched = await request('/api/toDos/delete', 'POST', {id}, {
-      Authorization: `Bearer ${token}`
-    })
-    setToDos(fetched)
-  }, [toDos])
-
 
   useEffect(() => {
     fetchTodos()
@@ -39,12 +34,8 @@ export const ToDosPage = () => {
     <Fragment>
       {!loading && (
         <Fragment>
-          <h2>Мой список дел</h2>
-          <div className="controls">
-            <Link to={'/toDos/create/'}>Добавить задание</Link>
-            <Link to={'/toDos/allToDos/'}>Список заданий всех пользователей</Link>
-          </div>
-          <ToDosList toDos={toDos} deleteItem={deleteItem}/>
+          <h2>Список всех пользователей</h2>
+          <ToDosList toDos={toDos} owner={owner}/>
         </Fragment>
       )}
     </Fragment>

@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
 import {useHttp} from '../hooks/http.hook'
 import {AuthContext} from '../context/AuthContext'
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 
-export const CreateToDoPage = () => {
+export const EditToDoPage = () => {
   const history = useHistory()
   const {request} = useHttp()
+
   const [toDo, setToDo] = useState({
     title: '', description: '', dateExecution: ''
   })
+  const toDoID = useParams().id;
   const {token} = useContext(AuthContext)
-
   useEffect(() => {
     window.M.updateTextFields() // make inputs active
   }, [])
@@ -19,18 +20,31 @@ export const CreateToDoPage = () => {
     setToDo({ ...toDo, [event.target.name]: event.target.value })
   }
 
-  const createToDo = async () => {
+  const editToDo = async () => {
     try {
-      await request('/api/toDos/create', 'POST', toDo, {
+      await request(`/api/toDos/${toDoID}`, 'POST', toDo, {
         Authorization: `Bearer ${token}`
       })
       history.push(`/toDos`)
     } catch (e) {}
   }
 
+  const fetchTodo = useCallback(async () => {
+    try {
+      const response = await request(`/api/toDos/${toDoID}`, 'GET', null, {
+        Authorization: `Bearer ${token}`
+      });
+      setToDo({ title: response.title, description: response.description, dateExecution: response.dateExecution })
+    } catch (e) {}
+  }, [token, request])
+
+  useEffect(() => {
+    fetchTodo()
+  }, [fetchTodo])
+
   return (
     <div className="row">
-      <h2>Создать задание</h2>
+      <h2>Редактировать задание</h2>
       <div className="card blue darken-1">
         <div className="card-content white-text">
           <div className="input-field">
@@ -71,9 +85,9 @@ export const CreateToDoPage = () => {
         <div className="card-action">
           <button
             className="btn yellow darken-4"
-            onClick={createToDo}
+            onClick={editToDo}
           >
-            Создать
+            Сохранить
           </button>
         </div>
       </div>
